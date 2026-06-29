@@ -1,0 +1,8 @@
+# environment.yml
+name: llms_from_scratch_env
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - uv
+
