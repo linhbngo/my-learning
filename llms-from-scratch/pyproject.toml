@@ -41,7 +41,8 @@ dev = [
 bonus = [
     "blobfile>=3.0.0",
     "chainlit>=1.2.0",
-    "gensim",                  # <-- Added here for Word2Vec support
+    "gensim", # <-- Added here for Word2Vec support
+    "datasets",
     "huggingface_hub>=0.34.4",
     "ipywidgets>=8.1.2",
     "llms_from_scratch>=1.0.18",

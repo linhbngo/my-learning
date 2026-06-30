@@ -2,23 +2,21 @@ from gensim.models import Word2Vec
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 import re
-import zipfile
+from datasets import load_dataset
 
-STOP_WORDS = {
-    "the", "a", "an", "and", "or", "but", "is", "are", "was", "were", 
-    "to", "of", "in", "on", "at", "by", "for", "with", "from", "as", 
-    "it", "its", "they", "them", "this", "that", "these", "those"
-}
+
+dataset = load_dataset("Salesforce/wikitext", "wikitext-103-raw-v1", split = "train")
 
 sentences = []
-with zipfile.ZipFile("../../data/aristo-mini-corpus.zip", "r") as z:
-    with z.open("Aristo-Mini-Corpus-Dec2016.txt") as file:
-        for line in file:
-          text_line = line.decode("utf-8").lower()
-          line_words = re.findall(r"[a-zA-Z]+", text_line)
-          filtered_words = [w for w in line_words if w not in STOP_WORDS]
-#          sentences.append(line_words)
-          sentences.append(filtered_words)  
+
+for item in dataset:
+    line = item["text"].strip()
+    if not line:
+        continue
+    text_line = line.lower()
+    line_words = re.findall(r"[a-z]+", text_line)
+    if line_words:
+        sentences.append(line_words)
 
 # 2. Train a small Word2Vec model
 # vector_size = 50 to be representative enough
@@ -55,3 +53,14 @@ print(f"Squirrel vs Duck:  {get_similarity(squirrel_vec, duck_vec):.4f} (Low - c
 print(f"Squirrel vs Goose: {get_similarity(squirrel_vec, goose_vec):.4f} (Low - completely different context)")
 print(f"Squirrel vs Eagle: {get_similarity(squirrel_vec, eagle_vec):.4f} (Low - completely different context)")
 
+print(f"Total processed lines/sentences: {len(words)}")
+print(f"Example line: {words[0] if words else 'Empty'}")
+
+# Count the frequencies to verify your animals exist here
+flat_words = [word for line in words for word in line]
+word_counts = Counter(flat_words)
+
+targets = ["goose", "duck", "squirrel", "eagle"]
+print("\n=== NEW ANIMAL COUNTS ===")
+for animal in targets:
+    print(f"{animal.capitalize()}: {word_counts[animal]} times")
