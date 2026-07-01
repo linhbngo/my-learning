@@ -38,8 +38,6 @@ else:
 # epochs=10 to avoid overtrainning
 #
 
-# Restore stderr after training completes so you can see real bugs later
-# This is for Mac
 if sys.platform == "darwin":
     sys.stderr = open(os.devnull,"w")
 
@@ -60,27 +58,18 @@ goose_vec = model.wv.get_vector('goose', norm = True).reshape(1, -1)
 duck_vec = model.wv.get_vector('duck', norm = True).reshape(1, -1)
 squirrel_vec = model.wv.get_vector('squirrel', norm = True).reshape(1, -1)
 
-# 4. Print the raw numeric vectors
-#print("=== RAW WORD EMBEDDINGS (50 Dimensions) ===")
-#print(f"Eagle vector:    {np.round(eagle_vec[0], 4)}")
-#print(f"Goose vector:    {np.round(goose_vec[0], 4)}")
-#print(f"Duck vector:     {np.round(duck_vec[0], 4)}")
-#print(f"Squirrel vector: {np.round(squirrel_vec[0], 4)}")
-#print("\n" + "="*40 + "\n")
-
 # 5. Calculate Cosine Similarity (1.0 means identical direction, 0.0 means orthogonal/unrelated)
 def get_similarity(vec1, vec2):
     return cosine_similarity(vec1, vec2)[0][0]
 
-
 print("=== COSINE SIMILARITY SCORES ===")
-print(f"Goose vs Duck:     {get_similarity(goose_vec, duck_vec):.4f}  (Very High - both are water birds)")
-print(f"Eagle vs Goose:    {get_similarity(eagle_vec, goose_vec):.4f}  (Moderate/High - both are flying birds)")
-print(f"Eagle vs Duck:     {get_similarity(eagle_vec, duck_vec):.4f}  (Moderate/High - both are flying birds)")
+print(f"Goose vs Duck:     {get_similarity(goose_vec, duck_vec):.4f}  (Expect very High - both are water birds)")
+print(f"Eagle vs Goose:    {get_similarity(eagle_vec, goose_vec):.4f}  (Expect moderate/High - both are flying birds)")
+print(f"Eagle vs Duck:     {get_similarity(eagle_vec, duck_vec):.4f}  (Expect moderate/High - both are flying birds)")
 print("-" * 40)
-print(f"Squirrel vs Duck:  {get_similarity(squirrel_vec, duck_vec):.4f} (Low - completely different context)")
-print(f"Squirrel vs Goose: {get_similarity(squirrel_vec, goose_vec):.4f} (Low - completely different context)")
-print(f"Squirrel vs Eagle: {get_similarity(squirrel_vec, eagle_vec):.4f} (Low - completely different context)")
+print(f"Squirrel vs Duck:  {get_similarity(squirrel_vec, duck_vec):.4f} (Expect low - completely different context)")
+print(f"Squirrel vs Goose: {get_similarity(squirrel_vec, goose_vec):.4f} (Expect low - completely different context)")
+print(f"Squirrel vs Eagle: {get_similarity(squirrel_vec, eagle_vec):.4f} (Expect low - completely different context)")
 
 print(f"Total processed lines/sentences: {len(sentences)}")
 print(f"Example line: {sentences[0] if sentences else 'Empty'}")
