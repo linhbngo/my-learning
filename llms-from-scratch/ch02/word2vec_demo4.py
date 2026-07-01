@@ -8,7 +8,7 @@ import os
 import sys
 from collections import Counter
 
-CACHE_FILE = "../../data/wikitext_processed_words.pkl"
+CACHE_FILE = "../../data/simplewiki_processed_words.pkl"
 
 
 sentences = []
@@ -18,15 +18,19 @@ if os.path.exists(CACHE_FILE):
     with open(CACHE_FILE, "rb") as f:
         sentences = pickle.load(f)
 else:
-    dataset = load_dataset("Salesforce/wikitext", "wikitext-103-raw-v1", split = "train")
+    dataset = load_dataset("Tralalabs/simple-english-wikipedia", split = "train")
     for item in dataset:
-        line = item["text"].strip()
-        if not line:
-            continue
-        text_line = line.lower()
-        line_words = re.findall(r"[a-z]+", text_line)
-        if line_words:
-            sentences.append(line_words)
+        raw_article = item["text"]
+        lines = re.split(r'(?<=[.!?])\s+', raw_article)
+
+        for line in lines:
+            clean_line = line.strip()
+            if not clean_line:
+                continue
+            text_line = clean_line.lower()
+            line_words = re.findall(r"[a-z]+", text_line)
+            if line_words:
+                sentences.append(line_words)
     print(f"Saving processed words to local cache: {CACHE_FILE}")
     with open(CACHE_FILE, "wb") as f:
         pickle.dump(sentences, f, protocol = pickle.HIGHEST_PROTOCOL)
@@ -82,3 +86,6 @@ targets = ["goose", "duck", "squirrel", "eagle"]
 print("\n=== NEW ANIMAL COUNTS ===")
 for animal in targets:
     print(f"{animal.capitalize()}: {word_counts[animal]} times")
+    neighbors = model.wv.most_similar(animal, topn=15)
+    neighbor_words = [word for word, sim in neighbors]
+    print(f"{animal.capitalize()}: {neighbor_words}")
