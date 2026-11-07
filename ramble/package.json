@@ -1,0 +1,30 @@
+{
+    "name": "ramble",
+    "displayName": "Ramble",
+    "description": "A VS Code extension for AI companion",
+    "version": "0.0.1",
+    "publisher": "linhbngo",
+    "private": true,
+    "engines": {
+        "vscode": "^1.93.0"
+    },
+    "main": "./out/extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "ramble.inspect",
+                "title": "Learning Companion: Inspect Active File"
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "check": "tsc --noEmit -p ./"
+    },
+    "devDependencies": {
+        "@types/node": "20.19.0",
+        "@types/vscode": "^1.93.0",
+        "typescript": "^5.6.3"
+    }
+}
